@@ -1,3 +1,5 @@
+import json
+
 from IChatClient import IChat_Client
 from OpenAIConnector import Open_AI_Connector
 
@@ -8,7 +10,7 @@ class Chat_GPT_Client(IChat_Client):
         self.connector = Open_AI_Connector()    # init OpenAI object
         self.connection = self.connector.return_connection()    # init connection to GPT model
         self.completion = None  # init completion object
-        self.response = dict
+        self.response = None
 
     # make_request it`s a method which realise requesting to GTP model
     def make_request(self, content: str):
@@ -25,10 +27,11 @@ class Chat_GPT_Client(IChat_Client):
                      'content': f'{content}'}
                 ]
             )
-            self.response = self.completion.choices[0]['message']['content']
+            self.response = self.completion.choices
+
+            return self.response
         except Exception as ex:
             return ex
 
-    # returns response object
     def return_response(self):
         return self.response
