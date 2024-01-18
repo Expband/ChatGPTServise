@@ -19,8 +19,12 @@ class GPT_service(Resource, IService):
 
     def post(self):
         self.__raw_request = request.get_json()
-        if self.__validator.validate(request=self.__raw_request):
+        if not self.__validator.validate(request=self.__raw_request)['validation_status']:
             self.__response = self.__gpt_client.make_request(content=self.__raw_request['content'])
-            return jsonify({'response_object': {'message': self.__response[0].message.content,
-                                                'finish_reason': self.__response[0].finish_reason,
-                                                'index': self.__response[0].index}})
+            return make_response(jsonify({'choices': {'message': self.__response[0].message.content,
+                                                            'finish_reason': self.__response[0].finish_reason,
+                                                            'index': self.__response[0].index}}), 200)
+        else:
+            return make_response(jsonify({'error': {
+                f'content': f'{self.__validator.return_error_message()['content']}'
+            }}), 400)

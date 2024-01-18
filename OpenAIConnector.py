@@ -1,5 +1,5 @@
 from openai import OpenAI
-from ConfigParser import Config_parser
+from Config.ConfigParser import *
 
 
 class Open_AI_Connector:
