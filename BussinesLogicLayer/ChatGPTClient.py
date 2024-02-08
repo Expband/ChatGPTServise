@@ -25,7 +25,6 @@ class Chat_GPT_Client(IChat_Client):
                      'content': f'{content}'}
                 ]
             )
-            print(self.completion.choices)
             self.response = self.completion.choices
 
             return self.response

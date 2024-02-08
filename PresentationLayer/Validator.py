@@ -15,7 +15,7 @@ class Validator:
         self._form_validator.validate(request=request, rules=self.__rules)
         self._error_status = self._form_validator.failed()
         print(f'Is validation failed: {self._error_status}')
-        if not self._error_status:
+        if self._error_status:
             print(f'Validation message: {self._form_validator.get_messages()}')
             self._error_message = self._form_validator.get_messages()
             print(f'Validation error: {self._form_validator.get_errors()}')
