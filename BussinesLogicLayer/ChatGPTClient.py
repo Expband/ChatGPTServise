@@ -1,7 +1,5 @@
-import json
-
-from IChatClient import IChat_Client
-from OpenAIConnector import Open_AI_Connector
+from BussinesLogicLayer.IChatClient import IChat_Client
+from BussinesLogicLayer.OpenAIConnector import Open_AI_Connector
 
 
 class Chat_GPT_Client(IChat_Client):
