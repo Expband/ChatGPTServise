@@ -21,13 +21,18 @@ class GPT_service(Resource, IService):
         pass
 
     def post(self):
-        self.__raw_request = request.get_json()
-        if not self.__validator.validate(request=self.__raw_request)['validation_status']:
-            self.__response = self.__gpt_client.make_request(content=self.__raw_request['content'])
-            self.__prepared_response = {'message': self.__response[0].message.content,
-                                        'finish_reason': self.__response[0].finish_reason,
-                                        'index': self.__response[0].index}
-            return self.__gpt_responser.send_response(status_code=200, response_body=self.__prepared_response)
-        else:
-            self.__prepared_response = {'content': f'{self.__validator.return_error_message()['content']}'}
+        try:
+            self.__raw_request = request.get_json()
+            if not self.__validator.validate(request=self.__raw_request)['validation_status']:
+                self.__response = self.__gpt_client.make_request(content=self.__raw_request['content'])
+                self.__prepared_response = {'message': self.__response[0].message.content,
+                                            'finish_reason': self.__response[0].finish_reason,
+                                            'index': self.__response[0].index}
+                return self.__gpt_responser.send_response(status_code=200, response_body=self.__prepared_response)
+            else:
+                self.__prepared_response = {'content': f'{self.__validator.return_error_message()['content']}'}
+                return self.__gpt_responser.send_response(status_code=400, response_body=self.__prepared_response)
+        except Exception as ex:
+            self.__prepared_response = {'content': f'{str(ex)}'}
+            print(ex)
             return self.__gpt_responser.send_response(status_code=400, response_body=self.__prepared_response)
